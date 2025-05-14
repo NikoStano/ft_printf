@@ -28,13 +28,13 @@ cat <<EOF > $MAIN_FILE
 #define RED		"\033[0;31m"
 #define BBLUE	"\033[1;34m"
 #define BLUE	"\033[0;34m"
-#define RESET	"\033[0m"
+#define NC	"\033[0m"
 
 #define SHOW(title) \
-	printf(BBLUE "==== TEST %s ====" RESET "\n", title)
+	printf(BBLUE "==== TEST %s ====" NC "\n", title)
 #define PRINT_RET(ft, sys) \
-	printf((ft == sys) ? GREEN "ret: ft_=%d, sys=%d\n\n" RESET \
-					   : RED "ret: ft_=%d, sys=%d\n\n" RESET, \
+	printf((ft == sys) ? GREEN "ret: ft_=%d, sys=%d\n\n" NC \
+					   : RED "ret: ft_=%d, sys=%d\n\n" NC, \
 		ft, sys)
 //#define SHOW(title) \
 //	printf("==== TEST %s ====\n", title)
@@ -79,8 +79,8 @@ int	main(void)
 	PRINT_RET(ret_ft, ret_sys);
 
 	SHOW("%p MAX");
-	ret_ft = ft_printf("ft_ : [%p]\n", (void *)0xFFFFFF);
-	ret_sys = printf("sys : [%p]\n", (void *)0xFFFFFF);
+	ret_ft = ft_printf("ft_ : [%p]\n", (void *)0xFFFFFFF);
+	ret_sys = printf("sys : [%p]\n", (void *)0xFFFFFFF);
 	PRINT_RET(ret_ft, ret_sys);
 
 	SHOW("%d et %i");
@@ -159,7 +159,20 @@ int	main(void)
 	ret_ft = ft_printf("ft_ : [%u]\n", UINT_MAX);
 	ret_sys = printf("sys : [%u]\n", UINT_MAX);
 	PRINT_RET(ret_ft, ret_sys);
+
+	// TEST SANS FLAG
 	
+	//SHOW("retour -1 invalide format");
+	//ret_ft = ft_printf("%", 9);
+	//ret_sys = printf("%", 9);
+	//PRINT_RET(ret_ft, ret_sys);
+
+	//SHOW("retour -1 NULL format");
+	//const char *fmt, *fmt1 = NULL;
+	//int	ret1 = ft_printf(fmt);
+	//int ret2 = printf(fmt1);
+	//PRINT_RET(ret1, ret2);
+
 	return (0);
 }
 EOF
@@ -187,7 +200,7 @@ else
 fi
 
 echo "${GBLUE}=== [2] Compilation du fichier de test ===${NC}"
-cc -Wall -Wextra -Werror -g3 $MAIN_FILE libftprintf.a -o $EXEC_FILE
+cc -Wall -Werror -Wextra -g3 $MAIN_FILE libftprintf.a -o $EXEC_FILE
 if [ $? -ne 0 ]; then
 	echo "\033[1;31mErreur lors de la compilation du test\033[0m"
 	clean_files_and_exit
@@ -197,6 +210,7 @@ fi
 
 echo "${GBLUE}=== [3] Vérification mémoire avec valgrind ===${NC}"
 valgrind --leak-check=full --show-leak-kinds=all -s ./$EXEC_FILE
+
 
 if [ $? -ne 0 ]; then
 	echo "\033[1;31mErreur de mémoire\033[0m"
