@@ -1,42 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putptr.c                                        :+:      :+:    :+:   */
+/*   ft_print_ptr.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nistanoj <nistanoj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 21:53:17 by nistanoj          #+#    #+#             */
-/*   Updated: 2025/04/11 01:17:56 by nistanoj         ###   ########.fr       */
+/*   Created: 2025/04/27 20:56:11 by nistanoj          #+#    #+#             */
+/*   Updated: 2025/05/17 16:04:08 by nistanoj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static int	ft_hex_conv(unsigned long long num)
+int	ft_convert(size_t ptr)
 {
-	int	nb;
+	int	ret;
 
-	nb = 0;
-	if (num >= 16)
-		nb += ft_hex_conv(num / 16);
-	if (num % 16 < 10)
-		nb += ft_putchar((num % 16) + '0');
-	else
-		nb += ft_putchar((num % 16) - 10 + 'a');
-	return (nb);
+	ret = 0;
+	if (ptr >= 16)
+		ret += ft_convert(ptr >> 4);
+	ret += ft_putchar("0123456789abcdef"[ptr & 0xf]);
+	return (ret);
 }
 
-int	ft_putptr(unsigned long long ptr)
+int	ft_print_ptr(void *ptr)
 {
-	int	nb;
+	int	ret;
 
 	if (!ptr)
 		return (ft_putstr("(nil)"));
-	nb = 0;
-	nb += ft_putstr("0x");
-	if (ptr == 0)
-		nb += ft_putchar('0');
-	else
-		nb += ft_hex_conv(ptr);
-	return (nb);
+	ret = 0;
+	ret += ft_putstr("0x");
+	ret += ft_convert((size_t)ptr);
+	return (ret);
 }

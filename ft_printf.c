@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nistanoj <nistanoj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 03:09:43 by nistanoj          #+#    #+#             */
-/*   Updated: 2025/05/14 03:47:44 by nistanoj         ###   ########.fr       */
+/*   Created: 2025/04/27 16:29:01 by nistanoj          #+#    #+#             */
+/*   Updated: 2025/05/17 15:49:05 by nistanoj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static int	ft_find_format(char c, va_list args)
+static int	ft_find_format(const char c, va_list args)
 {
 	if (c == '%')
 		return (ft_putchar('%'));
@@ -23,20 +23,20 @@ static int	ft_find_format(char c, va_list args)
 	else if (c == 'd' || c == 'i')
 		return (ft_putnbr(va_arg(args, int)));
 	else if (c == 'u')
-		return (ft_put_unbr(va_arg(args, unsigned int)));
+		return (ft_putnbr_u(va_arg(args, unsigned int)));
 	else if (c == 'p')
-		return (ft_putptr(va_arg(args, unsigned long long)));
+		return (ft_print_ptr(va_arg(args, void *)));
 	else if (c == 'x' || c == 'X')
-		return (ft_puthex(va_arg(args, unsigned int), c));
+		return (ft_print_hex(va_arg(args, unsigned int), c));
 	else
 		return (-1);
 }
 
-static int	ft_parse_format(const char *format, va_list args)
+static int	ft_format_check(const char *format, va_list args)
 {
 	int	i;
-	int	count;
 	int	ret;
+	int	count;
 
 	i = 0;
 	count = 0;
@@ -61,38 +61,12 @@ static int	ft_parse_format(const char *format, va_list args)
 int	ft_printf(const char *format, ...)
 {
 	va_list	args;
-	int		res;
+	int		ret;
 
 	if (!format)
 		return (-1);
 	va_start(args, format);
-	res = ft_parse_format(format, args);
+	ret = ft_format_check(format, args);
 	va_end(args);
-	return (res);
+	return (ret);
 }
-
-// int	ft_printf(const char *format, ...)
-// {
-// 	va_list	args;
-// 	int		i;
-// 	int		str;
-
-// 	if (!format)
-// 		return (-1);
-// 	va_start(args, format);
-// 	i = 0;
-// 	str = 0;
-// 	while (format[i])
-// 	{
-// 		if (format[i] == '%' && format[i + 1])
-// 		{
-// 			i++;
-// 			str += ft_find_format(format[i], args);
-// 		}
-// 		else
-// 			str += ft_putchar(format[i]);
-// 		i++;
-// 	}
-// 	va_end(args);
-// 	return (str);
-// }

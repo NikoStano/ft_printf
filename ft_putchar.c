@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nistanoj <nistanoj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 03:10:13 by nistanoj          #+#    #+#             */
-/*   Updated: 2025/04/10 23:09:56 by nistanoj         ###   ########.fr       */
+/*   Created: 2025/04/27 18:34:59 by nistanoj          #+#    #+#             */
+/*   Updated: 2025/05/17 16:04:51 by nistanoj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,9 @@
 
 int	ft_putchar(char c)
 {
-	return (write(1, &c, 1));
+	const int	ret = write(1, &c, 1);
+
+	if (ret == -1)
+		return (-1);
+	return (ret);
 }

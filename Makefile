@@ -5,42 +5,37 @@
 #                                                     +:+ +:+         +:+      #
 #    By: nistanoj <nistanoj@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/04/07 01:38:02 by nistanoj          #+#    #+#              #
-#    Updated: 2025/05/14 03:46:48 by nistanoj         ###   ########.fr        #
+#    Created: 2025/04/27 16:32:33 by nistanoj          #+#    #+#              #
+#    Updated: 2025/05/17 16:02:25 by nistanoj         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME			=	libftprintf.a
+NAME		=	libftprintf.a
+HEADER		=	ft_printf.h
 
-CC				=	gcc
-CFLAGS			=	-Wall -Wextra -Werror
-COMPILE			=	$(CC) $(CFLAGS)
-HEADER			=	ft_printf.h
-DIR_OBJ			=	obj
+CC			=	cc
+CFLAGS		=	-Wall -Werror -Wextra
+COMPILE		=	$(CC) $(CFLAGS)
 
-SRCS 			=	ft_printf.c ft_putchar.c ft_putstr.c ft_putnbr.c \
-					ft_putptr.c ft_puthex.c
-OBJ				=	$(SRCS:%.c=$(DIR_OBJ)/%.o)
+SRCS		=	ft_printf.c ft_putchar.c ft_putstr.c ft_putnbr.c ft_print_ptr.c \
+				ft_print_hex.c
 
-all				:	$(NAME)
+OBJS		=	$(SRCS:.c=.o)
 
-$(NAME)			:	$(OBJ)
-	@ar rc $@ $^
-	@ranlib $@
+all		:	$(NAME)
 
-$(DIR_OBJ)/%.o	:	%.c $(HEADER)
-	@mkdir -p $(DIR_OBJ)
-	@$(COMPILE) -o $@ -c $<
-	@echo "$(notdir $<) Compiled"
+$(NAME)	:	$(OBJS)
+	@ar -rcs $@ $^
 
-clean			:
-	@rm -f $(OBJ) $(BONUS_OBJ)
-	@rm -rf $(DIR_OBJ)
+%.o		:	%.c
+	$(COMPILE) -o $@ -c $<
 
-fclean			:	clean
+clean	:
+	@rm -f $(OBJS)
+
+fclean	:	clean
 	@rm -f $(NAME)
 
-re				:	fclean all
+re		:	fclean all
 
-.PHONY			:	all clean fclean re
-
+.PHONY	:	all clean fclean re
